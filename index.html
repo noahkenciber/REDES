@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GHOST.TRACE - OSINT Simulator</title>
+<meta name="description" content="Simulador educacional de OSINT com visual hacker. Todos os dados exibidos são fictícios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+
+<div class="wrap">
+  <div class="disclaimer">⚠ Ambiente de simulação. Todas as pessoas, números, e-mails, endereços e vazamentos exibidos são gerados aleatoriamente e totalmente fictícios.</div>
+
+  <header class="top">
+    <div>
+      <h1>GHOST<span>.</span>TRACE</h1>
+      <div class="sub">Simulador de inteligência em fontes abertas · OSINT v4.2</div>
+    </div>
+    <div class="status"><span class="dot"></span><span id="clock">--:--:--</span> · SISTEMA ONLINE</div>
+  </header>
+
+  <section class="stats" aria-label="Estatísticas do sistema">
+    <div class="stat"><div class="k">Acessos ao site</div><div class="v" id="s-visits">0</div><div class="n">desde a ativação</div></div>
+    <div class="stat"><div class="k">Investigações</div><div class="v" id="s-inv">0</div><div class="n">concluídas no total</div></div>
+    <div class="stat"><div class="k">Suas investigações</div><div class="v" id="s-mine">0</div><div class="n">neste navegador</div></div>
+    <div class="stat"><div class="k">Operadores online</div><div class="v" id="s-online">0</div><div class="n">agora</div></div>
+    <div class="stat"><div class="k">Bases indexadas</div><div class="v" id="s-db">0</div><div class="n">registros fictícios</div></div>
+    <div class="stat"><div class="k">Fontes ativas</div><div class="v" id="s-src">0</div><div class="n">de 218 monitoradas</div></div>
+    <div class="stat"><div class="k">Tempo de resposta</div><div class="v" id="s-lat">0 ms</div><div class="n">média das consultas</div></div>
+    <div class="stat"><div class="k">Uptime</div><div class="v" id="s-up">99.98%</div><div class="n">últimos 90 dias</div></div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Seções">
+    <button class="tab" role="tab" id="tab-search" aria-selected="true" aria-controls="view-search">Pesquisa</button>
+    <button class="tab" role="tab" id="tab-hist" aria-selected="false" aria-controls="view-hist">Histórico<span class="badge" id="hist-count">0</span></button>
+  </nav>
+
+  <main>
+    <section id="view-search" role="tabpanel" aria-labelledby="tab-search" class="panel">
+      <div class="ph"><span>// terminal de consulta</span><span>sessão <span id="sess">0000</span></span></div>
+      <div class="pb">
+        <form class="search" id="form" autocomplete="off">
+          <label class="field" for="q">
+            <span class="prompt">alvo@ghost:~$</span>
+            <input id="q" type="text" placeholder="nome, e-mail, telefone ou @usuário" maxlength="80" spellcheck="false">
+          </label>
+          <button class="btn" type="submit" id="go">Iniciar varredura</button>
+        </form>
+        <div class="hint">Digite o que você sabe sobre o alvo. A mesma entrada sempre gera o mesmo perfil fictício.</div>
+        <div class="chips" id="chips">
+          <button type="button" class="chip" data-q="Carlos Almeida">Carlos Almeida</button>
+          <button type="button" class="chip" data-q="marina.souza@exemplo.test">marina.souza@exemplo.test</button>
+          <button type="button" class="chip" data-q="(11) 91234-5678">(11) 91234-5678</button>
+          <button type="button" class="chip" data-q="@darkfox_77">@darkfox_77</button>
+        </div>
+        <div id="scan" hidden>
+          <div class="bar"><i id="scan-bar"></i></div>
+          <div id="log" aria-live="polite"></div>
+        </div>
+        <div id="result" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="view-hist" role="tabpanel" aria-labelledby="tab-hist" class="panel" hidden>
+      <div class="ph"><span>// histórico de investigações</span><span id="hist-meta">0 registros</span></div>
+      <div class="pb">
+        <div class="actions" style="margin-top:0;margin-bottom:12px">
+          <button class="btn danger" id="hist-clear" type="button">Limpar histórico</button>
+          <span class="sim-note" id="hist-note"></span>
+        </div>
+        <div id="hist-body"></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="two">
+    <div class="panel">
+      <div class="ph"><span>// atividade global</span><span>ao vivo</span></div>
+      <div class="pb"><div class="feed" id="feed"></div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span>// painel da rede</span><span>simulado</span></div>
+      <div class="pb">
+        <dl class="kv">
+          <dt>Nós ativos</dt><dd id="n-nodes">0</dd>
+          <dt>Países cobertos</dt><dd>112</dd>
+          <dt>Vazamentos catalogados</dt><dd id="n-leaks">0</dd>
+          <dt>Perfis sociais mapeados</dt><dd id="n-social">0</dd>
+          <dt>Alertas hoje</dt><dd id="n-alerts">0</dd>
+          <dt>Criptografia</dt><dd>AES-256 (ilustrativa)</dd>
+          <dt>Última sincronização</dt><dd id="n-sync">agora</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <footer>Projeto educacional · nenhum dado real é consultado <span class="cursor"></span></footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
